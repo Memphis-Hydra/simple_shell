@@ -1,20 +1,26 @@
-#include <stdio.h>
-#include <stdlib.h>
+CC = gcc
+src = $(wildcard *.c)
+obj = $(src:.c=.o)
+headers = $(wildcard *.h)
 
-/**
- * main - Entry point
- *
- * Return: Always 0 (Success)
- */
-int main(void)
-{
-    int i;
+bin = hsh
 
-    for (i = 0; i < 10; i++)
-    {
-        printf("%d\n", i);
-    }
+CFLAGS = -I . -Wall -Wextra -Werror -pedantic -std=c99 -g
 
-    return (0);
-}
+.PHONY: all clean fclean re
 
+all: $(bin)
+
+$(bin): $(obj) $(headers)
+	$(CC) -o $@ $(obj) $(CFLAGS)
+
+%.o: %.c $(headers)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+clean:
+	rm -f $(obj)
+
+fclean: clean
+	rm -f $(bin)
+
+re: fclean all
